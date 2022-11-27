@@ -1,9 +1,4 @@
 import Phaser = require("phaser");
-import { KHInputAxis } from "./KH/Input/Axis/KHInputAxis";
-import { KHInputKey } from "./KH/Input/Key/KHInputKey";
-import { KHPadAxis, KHPadInput } from "./KH/Input/KHInputProviderController";
-import { KHInputScene } from "./KH/Input/KHInputScene";
-import { KHInputSet } from "./KH/Input/KHInputSet";
 import { KHAnimatedText } from "./KHTextAnimator";
 
 enum AnimState {
@@ -24,7 +19,7 @@ export class TBDMainScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.bitmapFont('LegacYs', 'assets/LegacYs.png', 'assets/LegacYs.fnt');
+        this.load.bitmapFont('LegacYs', '/img/better-text-boxes/LegacYs.png', '/img/better-text-boxes/LegacYs.fnt');
     }
 
     private refreshText() {
