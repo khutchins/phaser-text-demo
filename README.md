@@ -1,6 +1,6 @@
 # Text Box Demo
 
-This is a demonstration to go along with an unpublished blog post at https://blog.khutchins.com/ that contains examples of different text box effects.
+This is a demonstration to go along with the blog post at https://blog.khutchins.com/posts/better-text-boxes-1/ that contrasts proper vs. improper text wrapping.
 
 ## Setup
 
