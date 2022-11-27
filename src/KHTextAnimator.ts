@@ -39,8 +39,8 @@ export class KHAnimatedText extends Phaser.GameObjects.BitmapText {
     private doneAnimating() {
         if (this.state == AnimState.DoneAnimating) return;
         this.animState = AnimState.DoneAnimating;
-        this.setText(this.text);
-        this.animIdx = this.text.length;
+        this.setText(this.fullText);
+        this.animIdx = this.fullText.length;
         if (this.animEvent) this.animEvent.remove(false);
     }
 
