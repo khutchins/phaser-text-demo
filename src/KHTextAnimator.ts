@@ -69,11 +69,12 @@ export class KHAnimatedText extends Phaser.GameObjects.BitmapText {
 
     animateText(text: string) {
         this.fullText = text;
-        this.setText("");
         if (!this.config.naiveWrap) {
+            this.setText(this.fullText);
             const bounds = this.getTextBounds(false);
             this.fullText = bounds.wrappedText || this.fullText;
         }
+        this.setText("");
         this.startAnimating();
     }
 
