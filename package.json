@@ -1,0 +1,39 @@
+{
+  "name": "KHPhaserBase",
+  "version": "1.0.0",
+  "description": "The base to my phaser projects. I probably won't remember to rename this.",
+  "main": "index.js",
+  "scripts": {
+    "build:prod": "webpack --config webpack.prod.js",
+    "build:dev": "webpack --config webpack.dev.js",
+    "dev": "webpack-dev-server --open --config webpack.dev.js",
+    "test": "mocha -r ts-node/register src/**/*.spec.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://khutchins@bitbucket.org/khutchins/tapit.git"
+  },
+  "author": "Kevin Hutchins",
+  "license": "UNLICENSED",
+  "homepage": "https://bitbucket.org/khutchins/fourblockdrop#readme",
+  "private": true,
+  "dependencies": {
+    "clean-webpack-plugin": "^1.0.1",
+    "copy-webpack-plugin": "^4.6.0",
+    "phaser": "^3.21.0",
+    "ts-loader": "^5.3.3",
+    "typescript": "^3.3.3333",
+    "webfontloader": "^1.6.28",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3",
+    "webpack-dev-server": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.7",
+    "@types/mocha": "^5.2.7",
+    "chai": "^4.2.0",
+    "mocha": "^6.2.2",
+    "ts-node": "^8.5.4",
+    "webpack-merge": "^4.2.1"
+  }
+}
