@@ -1,6 +1,6 @@
 import { TBDMainScene } from "./TBDMainScene";
 
-function makeGame(parentDiv: string): Phaser.Game {
+function makeGame(parentDiv: string, type: string): Phaser.Game {
     const config = {
         type: Phaser.AUTO,
         pixelArt: true,

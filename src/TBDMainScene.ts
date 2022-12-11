@@ -1,5 +1,5 @@
 import Phaser = require("phaser");
-import { KHAnimatedText } from "./KHTextAnimator";
+import { KHAnimatedText, TIMING_NAIVE_SLOW } from "./KHTextAnimator";
 
 enum AnimState {
     NotStarted,
@@ -39,7 +39,7 @@ export class TBDMainScene extends Phaser.Scene {
 
     create() {        
         const width = this.sys.game.scale.gameSize.width;
-        const height=  this.sys.game.scale.gameSize.height;
+        const height = this.sys.game.scale.gameSize.height;
 
         const inset = 10;
         const text = "This is a very carefully crafted test string.";
@@ -49,7 +49,7 @@ export class TBDMainScene extends Phaser.Scene {
         this.wrapTypeText = this.add.bitmapText(width - inset, inset, 'LegacYs', "Naive word wrapping.").setOrigin(1, 0).setTint(0xffff00);
         this.refreshText();
 
-        const animTextObj = new KHAnimatedText(this, inset * 2, 45, 'LegacYs', { naiveWrap: this.naiveWrap, delay: 50 }).setScale(3).setMaxWidth(width - inset * 4);
+        const animTextObj = new KHAnimatedText(this, inset * 2, 45, 'LegacYs', { naiveWrap: this.naiveWrap, timing: TIMING_NAIVE_SLOW }).setScale(3).setMaxWidth(width - inset * 4);
         animTextObj.setDropShadow(1, 1, 0x0, 1);
 
         this.input.mouse.disableContextMenu();
