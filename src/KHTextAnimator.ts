@@ -40,9 +40,10 @@ export class KHAnimatedText extends Phaser.GameObjects.BitmapText {
 
     private timingFor(idx: number): number {
         return this.config.timing(
+            this.charAt(idx - 2),
             this.charAt(idx - 1),
             this.charAt(idx),
-            this.charAt(idx + 1)
+            this.config.timing
         )
     }
 
@@ -100,15 +101,15 @@ export class KHAnimatedText extends Phaser.GameObjects.BitmapText {
     }
 }
 
-export const TIMING_NAIVE_SLOW: ITiming = function (prev: string, curr: string, next: string) {
+export const TIMING_NAIVE_SLOW: ITiming = function (prev: string, curr: string, next: string, timing: ITiming) {
     return 50;
 };
 
-export const TIMING_NAIVE: ITiming = function (prev: string, curr: string, next: string) {
-    return 35;
+export const TIMING_NAIVE: ITiming = function (prev: string, curr: string, next: string, timing: ITiming) {
+    return 50;
 };
 
-export const TIMING_ITERATION_1: ITiming = function (prev: string, curr: string, next: string) {
+export const TIMING_ITERATION_1: ITiming = function (prev: string, curr: string, next: string, timing: ITiming) {
     switch (curr) {
         case '\0':
         case ' ':
@@ -118,16 +119,103 @@ export const TIMING_ITERATION_1: ITiming = function (prev: string, curr: string,
         case '!':
         case '?':
         case ';':
-            return 200;
+            return 400;
         case ':':
         case '-':
         case ',':
-            return 100;
+            return 200;
         default:
-            return 15;
+            return 50;
+    }
+};
+
+export const TIMING_ITERATION_2: ITiming = function (prev: string, curr: string, next: string, timing: ITiming) {
+    // It looks odd to have extra time for a closing brace or quote,
+    // so apply the previous time (which was skipped) to play them
+    // together.
+    switch (curr) {
+        case ')':
+        case '"':
+        case ']':
+        case '}':
+            return timing('\0', prev, ' ', timing);
+    }
+    
+    // If the next character is one that we handled above, immediately move on
+    // to the next character. This character's delay will get added on at that
+    // phase.
+    switch (next) {
+        case ')':
+        case '"':
+        case ']':
+        case '}':
+        case '\0':
+            return 0;
+    }
+    
+    switch (curr) {
+        case '\0':
+        case ' ':
+        case '\n':
+            return 0;
+        case '.':
+        case '!':
+        case '?':
+        case ';':
+            return 400;
+        case ':':
+        case '—':
+        case ',':
+            return 200;
+        default:
+            return 50;
+    }
+};
+
+export const TIMING_ITERATION_3: ITiming = function (prev: string, curr: string, next: string, timing: ITiming) {
+    // It looks odd to have extra time for a closing brace or quote,
+    // so apply the previous time (which was skipped) to play them
+    // together.
+    switch (curr) {
+        case ')':
+        case '"':
+        case ']':
+        case '}':
+            return timing('\0', prev, ' ', timing);
+    }
+    
+    // If the next character is one that we handled above, immediately move on
+    // to the next character. This character's delay will get added on at that
+    // phase.
+    switch (next) {
+        case ')':
+        case '"':
+        case ']':
+        case '}':
+        case '\0':
+            return 0;
+    }
+    
+    switch (curr) {
+        case '\0':
+        case ' ':
+        case '\n':
+            return 0;
+        case '.':
+            if (prev == '.' || next == '.') return 200;
+        case '!':
+        case '?':
+        case ';':
+            return 400;
+        case ':':
+        case '—':
+        case ',':
+            return 200;
+        default:
+            return 50;
     }
 };
 
 export interface ITiming {
-    (prev: string, curr: string, next: string): number;
+    (prev: string, curr: string, next: string, timing: ITiming): number;
 }

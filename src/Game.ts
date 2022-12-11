@@ -1,6 +1,6 @@
 import { TBDMainScene } from "./TBDMainScene";
 
-function makeGame(parentDiv: string, type: string): Phaser.Game {
+function makeGame(parentDiv: string, type: string = "wrap"): Phaser.Game {
     const config = {
         type: Phaser.AUTO,
         pixelArt: true,
@@ -16,7 +16,7 @@ function makeGame(parentDiv: string, type: string): Phaser.Game {
         scene: [ TBDMainScene ],
     };
     const game = new Phaser.Game(config);
-    // (game as any).deadZoneType = type;
+    (game as any).demoType = type;
     return game;
 }
 

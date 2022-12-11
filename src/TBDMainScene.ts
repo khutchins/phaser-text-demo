@@ -1,18 +1,24 @@
 import Phaser = require("phaser");
-import { KHAnimatedText, TIMING_NAIVE_SLOW } from "./KHTextAnimator";
+import { KHAnimatedText, KHAnimatedTextConfig, TIMING_ITERATION_1, TIMING_ITERATION_2, TIMING_ITERATION_3, TIMING_NAIVE, TIMING_NAIVE_SLOW } from "./KHTextAnimator";
 
-enum AnimState {
-    NotStarted,
-    Animating,
-    DoneAnimating
-};
-
-const DELAY = 50;
+enum ExampleType {
+    Wrap,
+    Timing
+}
 
 export class TBDMainScene extends Phaser.Scene {
 
-    private naiveWrap: boolean = true;
     private wrapTypeText: Phaser.GameObjects.BitmapText;
+    private demoString: string;
+    private demoType: ExampleType;
+    private config: KHAnimatedTextConfig;
+
+    private readonly TIMING_ORDER = [
+        TIMING_NAIVE_SLOW,
+        TIMING_ITERATION_1,
+        TIMING_ITERATION_2,
+        TIMING_ITERATION_3
+    ]
 
     constructor() {
         super("TBDMainScene");
@@ -23,7 +29,32 @@ export class TBDMainScene extends Phaser.Scene {
     }
 
     private refreshText() {
-        this.wrapTypeText.setText(this.naiveWrap ? "Naive word wrapping." : "Wrap-aware word wrapping.")
+        switch (this.demoType) {
+            case ExampleType.Wrap:
+                this.wrapTypeText.setText(this.config.naiveWrap ? "Naive word wrapping." : "Wrap-aware word wrapping.")
+                break;
+            case ExampleType.Timing: 
+            default: {
+                let text;
+                switch (this.config.timing) {
+                    case TIMING_NAIVE_SLOW:
+                    default:
+                        text = "Naive timing";
+                        break;
+                    case TIMING_ITERATION_1:
+                        text = "Timing Mk. 1"
+                        break;
+                    case TIMING_ITERATION_2:
+                        text = "Timing Mk. 2"
+                        break;
+                    case TIMING_ITERATION_3:
+                        text = "Timing Mk. 3"
+                        break;
+                }
+                this.wrapTypeText.setText(text)
+                break;
+            }
+        }
     }
 
     drawTextBoxBackground(x: number, y: number, width: number, height: number) {
@@ -41,15 +72,47 @@ export class TBDMainScene extends Phaser.Scene {
         const width = this.sys.game.scale.gameSize.width;
         const height = this.sys.game.scale.gameSize.height;
 
+        this.demoString = (this.game as any).demoType;
+        let scale = 2;
+        let text;
+        if (this.demoString.startsWith("wrap")) {
+            scale = 3;
+            text = "This is a very carefully crafted test string.";
+            this.demoType = ExampleType.Wrap;
+        } else {
+            this.demoType = ExampleType.Timing;
+            text = '"Hey," she said. "Be careful: green ideas sleep furiously!" I don\'t know what she\'s talking about... do you?';
+        }
+
+        console.log(this.demoString);
+        switch (this.demoString) {
+            case "wrap":
+            default:
+                this.config = { naiveWrap: true, timing: TIMING_NAIVE_SLOW };
+                break;
+            case "timing-1":
+                this.config = { naiveWrap: false, timing: TIMING_NAIVE };
+                break;
+            case "timing-2":
+                this.config = { naiveWrap: false, timing: TIMING_ITERATION_1 };
+                break;
+            case "timing-3":
+                this.config = { naiveWrap: false, timing: TIMING_ITERATION_2 };
+                break;
+            case "timing-4":
+            case "timing-all":
+                this.config = { naiveWrap: false, timing: TIMING_ITERATION_3 };
+                break;
+        }
+
         const inset = 10;
-        const text = "This is a very carefully crafted test string.";
         // this.add.rectangle(10, 35, width - inset * 2, height - 45, 0x000088).setOrigin(0);
         this.drawTextBoxBackground(10, 35, width - inset * 2, height - 45);
         this.add.bitmapText(inset, inset, 'LegacYs', "Click to animate text.").setOrigin(0).setTint(0xffff00);
         this.wrapTypeText = this.add.bitmapText(width - inset, inset, 'LegacYs', "Naive word wrapping.").setOrigin(1, 0).setTint(0xffff00);
         this.refreshText();
 
-        const animTextObj = new KHAnimatedText(this, inset * 2, 45, 'LegacYs', { naiveWrap: this.naiveWrap, timing: TIMING_NAIVE_SLOW }).setScale(3).setMaxWidth(width - inset * 4);
+        const animTextObj = new KHAnimatedText(this, inset * 2, 45, 'LegacYs', this.config).setScale(scale).setMaxWidth(width - inset * 4);
         animTextObj.setDropShadow(1, 1, 0x0, 1);
 
         this.input.mouse.disableContextMenu();
@@ -57,8 +120,11 @@ export class TBDMainScene extends Phaser.Scene {
         this.input.on('pointerdown', (pointer) => {
             // Toggle wrap mode.
             if (pointer.rightButtonDown()) {
-                this.naiveWrap = !this.naiveWrap;
-                animTextObj.config.naiveWrap = this.naiveWrap;
+                if (this.demoType == ExampleType.Wrap) {
+                    this.config.naiveWrap = !this.config.naiveWrap;
+                } else if (this.demoString == "timing-all") {
+                    this.config.timing = this.TIMING_ORDER[(this.TIMING_ORDER.indexOf(this.config.timing) + 1) % this.TIMING_ORDER.length];
+                }
                 this.refreshText();
             }
             // Toggle animation.
