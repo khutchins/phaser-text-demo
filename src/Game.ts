@@ -13,6 +13,7 @@ function makeGame(parentDiv: string, type: string = "wrap"): Phaser.Game {
             gamepad: true,
         },
         parent: parentDiv,
+        transparent: true,
         scene: [ TBDMainScene ],
     };
     const game = new Phaser.Game(config);
