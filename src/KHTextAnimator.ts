@@ -1,6 +1,7 @@
 export interface KHAnimatedTextConfig {
     naiveWrap ?: boolean;
     delay ?: number;
+    textSound ?: Phaser.Sound.BaseSound;
     timing : ITiming;
 }
 
@@ -31,7 +32,9 @@ export class KHAnimatedText extends Phaser.GameObjects.BitmapText {
             const newText = this.fullText.substring(0, this.animIdx);
             this.setText(newText);
 
-            this.addTextCallback(this.timingFor(this.animIdx));
+            const delay = this.timingFor(this.animIdx);
+            if (delay > 0 && this.config.textSound) this.config.textSound.play();
+            this.addTextCallback(delay);
         }
         else {
             this.doneAnimating();

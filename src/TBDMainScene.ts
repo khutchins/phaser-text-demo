@@ -26,6 +26,7 @@ export class TBDMainScene extends Phaser.Scene {
 
     preload() {
         this.load.bitmapFont('LegacYs', '/img/better-text-boxes/LegacYs.png', '/img/better-text-boxes/LegacYs.fnt');
+        this.load.audio('blip', '/img/better-text-boxes/text-noise.mp3');
     }
 
     private refreshText() {
@@ -68,7 +69,8 @@ export class TBDMainScene extends Phaser.Scene {
         this.add.rectangle(x, y, width, height, bgColor).setOrigin(0);
     }
 
-    create() {        
+    create() {
+        this.game.sound.mute = true;
         const width = this.sys.game.scale.gameSize.width;
         const height = this.sys.game.scale.gameSize.height;
 
@@ -105,6 +107,8 @@ export class TBDMainScene extends Phaser.Scene {
                 break;
         }
 
+        this.config.textSound = this.sound.add('blip');
+
         const inset = 10;
         // this.add.rectangle(10, 35, width - inset * 2, height - 45, 0x000088).setOrigin(0);
         this.drawTextBoxBackground(10, 35, width - inset * 2, height - 45);
@@ -116,6 +120,12 @@ export class TBDMainScene extends Phaser.Scene {
         animTextObj.setDropShadow(1, 1, 0x0, 1);
 
         this.input.mouse.disableContextMenu();
+
+        if (this.demoType != ExampleType.Wrap) {
+            this.input.keyboard.on('keydown-M', () => {
+                this.game.sound.mute = !this.game.sound.mute;
+            })
+        }
         
         this.input.on('pointerdown', (pointer) => {
             // Toggle wrap mode.
